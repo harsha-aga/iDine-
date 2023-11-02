@@ -10,8 +10,10 @@ import SwiftUI
 struct MenuItemListView: View {
     let item: MenuItem
     var body: some View {
-        HStack {
-            Text("$\(item.price)").padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16))
+        VStack {
+            Image(item.mainImage).frame(width: 50, height: 50, alignment: .center).clipShape(Circle()).shadow(color: .purple, radius: 10)
+            Text(item.name).font(.title2).padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+            Text("$\(item.price)")
         }
     }
 }

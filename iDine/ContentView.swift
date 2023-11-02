@@ -9,37 +9,92 @@ import SwiftUI
 
 struct ContentView: View {
     let menu = Bundle.main.decode(type: [MenuSection].self, from: "menu.json")
+    @State private var isList = true
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(menu) { menuItem in
-                    Section(menuItem.name) {
-                        ForEach(menuItem.items) { item in
-                            HStack {
-                                Image(item.mainImage)
-                                    .resizable()
-                                    .frame(width: 50, height: 50)
-                                    .foregroundColor(.blue)
-                                    .clipShape(Circle())
-                                    .shadow(color: .purple,
-                                            radius: 5)
-                                    .padding(EdgeInsets(top: 0,
-                                                        leading: 0,
-                                                        bottom: 0,
-                                                        trailing: 16))
-                                Text(item.name).padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).fixedSize()
-                                MenuItemListView(item: item).frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-                        }
-                    }
+            DisplayView(isList: isList, menu: menu)
+            .navigationTitle("Menu")
+            .listStyle(.inset)
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0)).toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Toggle("List", isOn: $isList).padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                 }
             }
-            .navigationTitle("Menu")
-            .listStyle(.inset).padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
         }
     }
 }
 
 #Preview {
     ContentView()
+}
+
+struct HorizontalView: View {
+    let item: MenuItem
+    var body: some View {
+        HStack {
+            Image(item.mainImage)
+                .resizable()
+                .frame(width: 50, height: 50)
+                .foregroundColor(.blue)
+                .clipShape(Circle())
+                .shadow(color: .purple,
+                        radius: 5)
+                .padding(EdgeInsets(top: 0,
+                                    leading: 0,
+                                    bottom: 0,
+                                    trailing: 16))
+            Text(item.name).padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).fixedSize()
+            Text("$\(item.price)").padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).frame(maxWidth: .infinity, alignment: .trailing)
+        }
+    }
+}
+
+struct ExtractedView: View {
+    var menu: [MenuSection]
+    var body: some View {
+        List {
+            ForEach(menu) { menuItem in
+                Section(header: Text(menuItem.name).font(.title2)) {
+                    ForEach(menuItem.items) { item in
+                        HorizontalView(item: item)
+                    }
+                }.listRowSeparator(.hidden)
+            }
+        }
+    }
+}
+
+struct HorizontalExtractedView: View {
+    var menu: [MenuSection]
+    var body: some View {
+        List {
+            ForEach(menu) { menuItem in
+                Section {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(menuItem.items) { item in
+                                MenuItemListView(item: item)
+                                    .frame(maxWidth: .infinity, alignment: .center).padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
+                            }
+                        }
+                    }
+                } header: {
+                    Text(menuItem.name).font(.title2)
+                }.listRowSeparator(.hidden)
+                
+            }
+        }
+    }
+}
+
+struct DisplayView: View {
+    var isList: Bool
+    var menu: [MenuSection]
+    var body: some View {
+        if isList {
+            ExtractedView(menu: menu)
+        } else {
+            HorizontalExtractedView(menu: menu)
+        }
+    }
 }
