@@ -15,7 +15,7 @@ struct ContentView: View {
             DisplayView(isList: isList, menu: menu)
             .navigationTitle("Menu")
             .listStyle(.inset)
-            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0)).toolbar {
+            .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Toggle("List", isOn: $isList).padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                 }
@@ -31,20 +31,35 @@ struct ContentView: View {
 struct HorizontalView: View {
     let item: MenuItem
     var body: some View {
-        HStack {
-            Image(item.mainImage)
-                .resizable()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
-                .clipShape(Circle())
-                .shadow(color: .purple,
-                        radius: 5)
-                .padding(EdgeInsets(top: 0,
-                                    leading: 0,
-                                    bottom: 0,
-                                    trailing: 16))
-            Text(item.name).padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).fixedSize()
-            Text("$\(item.price)").padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).frame(maxWidth: .infinity, alignment: .trailing)
+        VStack {
+            HStack {
+                Image(item.mainImage)
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(.blue)
+                    .clipShape(Circle())
+                    .shadow(color: .purple,
+                            radius: 5)
+                    .padding(EdgeInsets(top: 0,
+                                        leading: 0,
+                                        bottom: 0,
+                                        trailing: 16))
+                Text(item.name).padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).fixedSize()
+                Text("$\(item.price)").padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).frame(maxWidth: .infinity, alignment: .trailing)
+            }
+            HStack {
+                let colors: [String: Color] = ["D": .purple, "G": .black, "N": .red, "S": .blue, "V": .green]
+                ForEach(item.restrictions, id: \.self) { restriction in
+                    Text(restriction)
+                        .font(.caption)
+                        .fontWeight(.black)
+                        .padding(5)
+                        .background(colors[restriction, default: .black])
+                        .clipShape(Circle())
+                        .foregroundStyle(.white)
+
+                }
+            }.frame(maxWidth: .infinity ,alignment: .trailing)
         }
     }
 }
@@ -80,6 +95,7 @@ struct HorizontalExtractedView: View {
                     }
                 } header: {
                     Text(menuItem.name).font(.title2)
+                    Spacer()
                 }.listRowSeparator(.hidden)
                 
             }
