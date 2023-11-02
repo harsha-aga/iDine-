@@ -15,13 +15,27 @@ struct ContentView: View {
                 ForEach(menu) { menuItem in
                     Section(menuItem.name) {
                         ForEach(menuItem.items) { item in
-                            MenuItemListView(item: item)
+                            HStack {
+                                Image(item.mainImage)
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.blue)
+                                    .clipShape(Circle())
+                                    .shadow(color: .purple,
+                                            radius: 5)
+                                    .padding(EdgeInsets(top: 0,
+                                                        leading: 0,
+                                                        bottom: 0,
+                                                        trailing: 16))
+                                Text(item.name).padding(EdgeInsets(top: 0,leading: 0,bottom: 0,trailing: 16)).fixedSize()
+                                MenuItemListView(item: item).frame(maxWidth: .infinity, alignment: .trailing)
+                            }
                         }
                     }
                 }
             }
-                .navigationTitle("Menu")
-                .listStyle(.inset).padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .navigationTitle("Menu")
+            .listStyle(.inset).padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 0))
         }
     }
 }
