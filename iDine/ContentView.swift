@@ -19,7 +19,7 @@ struct ContentView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Toggle("List", isOn: $isList).padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                 }
-            }
+            }.navigationDe
         }
     }
 }
