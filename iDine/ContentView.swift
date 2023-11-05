@@ -71,7 +71,11 @@ struct ExtractedView: View {
             ForEach(menu) { menuItem in
                 Section(header: Text(menuItem.name).font(.title2)) {
                     ForEach(menuItem.items) { item in
-                        HorizontalView(item: item)
+                        NavigationLink {
+                            ItemDetailView(item: item)
+                        } label: {
+                            HorizontalView(item: item)
+                        }
                     }
                 }.listRowSeparator(.hidden)
             }
@@ -88,8 +92,12 @@ struct HorizontalExtractedView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(menuItem.items) { item in
-                                MenuItemListView(item: item)
-                                    .frame(maxWidth: .infinity, alignment: .center).padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
+                                NavigationLink {
+                                    ItemDetailView(item: item)
+                                } label: {
+                                    MenuItemListView(item: item)
+                                        .frame(maxWidth: .infinity, alignment: .center).padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0))
+                                }
                             }
                         }
                     }
